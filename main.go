@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -13,5 +12,4 @@ func main() {
 
 	port := os.Getenv("PORT")
 	pkg.Run(port)
-	log.Println("Starting Redis server on port:", port)
 }
