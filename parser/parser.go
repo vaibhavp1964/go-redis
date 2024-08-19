@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -22,24 +23,34 @@ func ParseInput(input string, pos int) ([]string, int, bool) {
 		valid := false
 		newPos := 0
 
-		// case for CRLF
-		if encounteredCRLF(input, index) {
-			newPos, valid = jumpOverCRLF(input, index)
-			if newPos == -2 {
-				break
+		leadingChar := string(input[index])
+		EOL := false
+
+		switch leadingChar {
+		case string(constants.CRLF_LEADING):
+			// case for CRLF
+			if encounteredCRLF(input, index) {
+				newPos, valid = jumpOverCRLF(input, index)
+				if newPos == -2 {
+					EOL = true
+				}
 			}
-		}
-
-		// case for array
-		if string(input[index]) == string('*') {
+			break
+		case string(constants.ARRAY):
+			// case for array
 			newTokens, newPos, valid = getArray(input, index)
-		}
-
-		// case for strings
-		if string(input[index]) == string('$') {
+			break
+		case string(constants.BULK_STRING):
+			// case for strings
 			newTokens, newPos, valid = getString(input, index)
+			break
+		default:
+			fmt.Println(leadingChar)
 		}
 
+		if EOL {
+			break
+		}
 		if !valid {
 			return []string{}, -1, false
 		}
