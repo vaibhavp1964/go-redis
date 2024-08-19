@@ -8,4 +8,5 @@ const (
 	BULK_STRING   RESPConst = "$"
 	ARRAY         RESPConst = "*"
 	CRLF_LEADING  RESPConst = "\r"
+	SIMPLE_ERROR  RESPConst = "-"
 )

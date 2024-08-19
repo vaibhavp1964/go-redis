@@ -46,6 +46,8 @@ func ParseInput(input string, pos int) ([]string, int, bool) {
 			break
 		case string(constants.SIMPLE_STRING):
 			newTokens, newPos, valid = getSimpleString(input, index)
+		case string(constants.SIMPLE_ERROR):
+			newTokens, newPos, valid = getSimpleError(input, index)
 		default:
 			fmt.Println(leadingChar)
 		}
@@ -114,6 +116,20 @@ func getString(input string, pos int) ([]string, int, bool) {
 	return []string{strings.Join(inputString, "")}, index, true
 }
 
+func getSimpleError(input string, pos int) ([]string, int, bool) {
+	var b strings.Builder
+	index := pos + 1
+
+	for ; index < len(input); index++ {
+		if encounteredCRLF(input, index) {
+			break
+		}
+		b.WriteByte(input[index])
+	}
+
+	return []string{b.String()}, index, true
+}
+
 func getSimpleString(input string, pos int) ([]string, int, bool) {
 	var b strings.Builder
 	index := pos + 1
@@ -150,7 +166,7 @@ func encounteredCRLF(input string, pos int) bool {
 	chars := make([]string, 0)
 	index := pos
 
-	for ; index < pos+len(constants.CRLF); index++ {
+	for ; index < pos+len(constants.CRLF) && index < len(input); index++ {
 		chars = append(chars, string(input[index]))
 	}
 
